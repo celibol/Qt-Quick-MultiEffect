@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/SettingsComponentSlider.qml</file>
+        <file>qml/SettingsComponentView.qml</file>
+        <file>qml/SettingsComponentCheckBox.qml</file>
+        <file>qml/SettingsComponentColorSelector.qml</file>
+        <file>qml/SettingsComponentButton.qml</file>
+        <file>qml/images/arrow.png</file>
+        <file>qml/images/Built_with_Qt.png</file>
+        <file>qml/images/Built_with_Qt_RGB_logo.png</file>
+    </qresource>
+</RCC>

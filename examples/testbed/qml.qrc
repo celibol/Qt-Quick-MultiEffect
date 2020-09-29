@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/Settings.qml</file>
+        <file>qml/ResetSettingsOverlay.qml</file>
+        <file>qml/FpsItem.qml</file>
+        <file>qml/images/spinner.png</file>
+        <file>qml/images/warning.png</file>
+        <file>qml/WarningsView.qml</file>
+        <file>qml/WarningsItem.qml</file>
+        <file>qml/ShaderView.qml</file>
+        <file>qml/TestSourceItem.qml</file>
+        <file>qml/TestMaskItem.qml</file>
+        <file>qml/SettingsView.qml</file>
+        <file>qml/images/pause.png</file>
+        <file>qml/images/play.png</file>
+    </qresource>
+</RCC>

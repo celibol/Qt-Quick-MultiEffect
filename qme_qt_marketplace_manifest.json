@@ -1,0 +1,41 @@
+{
+    "$schema": "http://qt.io/schema/extension-schema-v1#",
+    "title": "Qt QuickMultiEffect",
+    "extensionType": [
+        "library"
+    ],
+    "version": "1.0.0",
+    "vendor": {
+        "name": "The Qt Company",
+        "url": "https://qt.io"
+    },
+    "contact": "marketplace@qt.io",
+    "copyright": [ "The Qt Company" ],
+    "author": "Qt RnD",
+    "icon": "https://cdn.shopify.com/s/files/1/0099/4220/4513/products/QtInstaller-896_896x.png",
+    "licenses": [
+      { "licenseType": "Qt Marketplace LA",
+        "licenseUrl": "https://www.qt.io/terms-conditions/#marketplace" }
+    ],
+    "created": "2020-08-26",
+    "lastUpdate": "2020-08-26",
+    "platforms": [
+        "all platforms supported by Qt"
+    ],
+    "qtVersions": [
+        "5.12 or newer"
+    ],
+    "tags": [
+        "Design", "Declarative", "Graphics", "OpenGL" ],
+    "price": {
+        "listprice": 29,
+        "orderType": "subscription",
+        "period": 12
+    },
+    "support": "Component support available for Qt commercial license users only",
+    "bugUrl": "https://bugreports.qt.io",
+    "sourceRepoUrl": "https://git.qt.io/pakerane/qtquickmultieffect",
+    "dependencies": [
+        "Quick"
+    ]
+}

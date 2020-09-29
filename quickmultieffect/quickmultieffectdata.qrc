@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/quickmultieffect">
+        <file>QuickMultiEffect.qml</file>
+        <file>shaders/compatibility/bluritems.frag</file>
+        <file>shaders/compatibility/bluritems.vert</file>
+        <file>private/BlurItem.qml</file>
+        <file>shaders/core/bluritems.frag</file>
+        <file>shaders/core/bluritems.vert</file>
+    </qresource>
+</RCC>

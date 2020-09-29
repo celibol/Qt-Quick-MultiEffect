@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/ItemSwitcher.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/SwitchEffectBlur.qml</file>
+        <file>qml/SwitchEffectBlinds.qml</file>
+        <file>qml/images/hblinds.png</file>
+        <file>qml/SwitchEffectHeart.qml</file>
+        <file>qml/images/heart.png</file>
+        <file>qml/SwitchEffectStars.qml</file>
+        <file>qml/images/star.png</file>
+        <file>qml/PagesView.qml</file>
+        <file>qml/PagesItem.qml</file>
+        <file>qml/SwitchEffectThunder.qml</file>
+        <file>qml/images/stripes.png</file>
+        <file>qml/images/background.png</file>
+        <file>qml/SettingsView.qml</file>
+        <file>qml/images/quit_coding.png</file>
+        <file>qml/images/smoke.png</file>
+        <file>qml/SwitchEffect3DFlip.qml</file>
+    </qresource>
+</RCC>

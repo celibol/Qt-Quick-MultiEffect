@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/mask.png</file>
+        <file>qml/FpsItem.qml</file>
+        <file>qml/spinner.png</file>
+    </qresource>
+</RCC>
