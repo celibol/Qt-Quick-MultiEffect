@@ -1,0 +1,29 @@
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
+
+project                 = QtQuickMultiEffect
+description             = Qt Quick MultiEffect Reference Documentation
+version                 = $QT_VERSION
+
+qhp.projects            = QtQuickMultiEffect
+
+qhp.QtQuickMultiEffect.file          = qtquickmultieffect.qhp
+qhp.QtQuickMultiEffect.namespace     = org.qt-project.qtquickmultieffect.$QT_VERSION_TAG
+qhp.QtQuickMultiEffect.virtualFolder = qtquickmultieffect
+qhp.QtQuickMultiEffect.indexTitle    = Qt Quick MultiEffect
+qhp.QtQuickMultiEffect.indexRoot     =
+
+qhp.QtQuickMultiEffect.filterAttributes                  = qtquickmultieffect $QT_VERSION qtrefdoc
+qhp.QtQuickMultiEffect.customFilters.Qt.name             = QtQuickMultiEffect $QT_VERSION
+qhp.QtQuickMultiEffect.customFilters.Qt.filterAttributes = qtquickmultieffect $QT_VERSION
+
+depends = qtdoc qtqml qtquick
+
+# This module has no documented C++ types, clear the module header
+moduleheader =
+
+{headerdirs,sourcedirs} += ../quickmultieffect
+exampledirs             += ../examples
+
+navigation.landingpage  = "Qt Quick MultiEffect"
+
+tagfile                 = qtquickmultieffect.tags

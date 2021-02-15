@@ -1,0 +1,69 @@
+/****************************************************************************
+**
+** Copyright (C) 2021 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** GNU Free Documentation License Usage
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file. Please review the following information to ensure
+** the GNU Free Documentation License version 1.3 requirements
+** will be met: https://www.gnu.org/licenses/fdl-1.3.html.
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+    \qmlmodule "qrc:/quickmultieffect"
+*/
+
+/*!
+    \page qtquickmultieffect-index.html
+    \title Qt Quick MultiEffect
+
+    \e QuickMultiEffect is a Qt Quick component for fast, animated effects. It
+    combines a subset of Qt Graphical Effects (with some extras) into a single
+    item and a shader effect. This shader is dynamically created based on which
+    features/effects user enables, to make it always as optimal as possible.
+    Notable, QuickMultiEffect is more performant than using multiple Qt
+    Graphical Effects when the amount of effects increases.
+
+    \section1 Features
+
+    Supported effects that can be freely mixed and matched:
+
+    \list
+        \li Blur
+        \li Shadow
+        \li Brightness
+        \li Contrast
+        \li Saturation
+        \li Colorize
+        \li Mask
+    \endlist
+
+    Shaders are generated for both \e {Compatibility Profile} (e.g. OpenGL ES 2.0)
+    and \e {Core Profile} (OpenGL 3.3+).
+
+    QuickMultiEffect component is implemented in pure Qt Quick / QML (without C++),
+    making it easy to integrate into Qt Quick applications.
+
+    \section1 Reference
+
+    \list
+        \li QuickMultiEffect QML Type
+        \li \l {Qt Quick MultiEffect Examples}
+    \endlist
+*/

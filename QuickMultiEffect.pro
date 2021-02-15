@@ -1,5 +1,7 @@
 # Add this into include path
 INCLUDEPATH += $$PWD/
 
-TEMPLATE = subdirs
-SUBDIRS += examples
+load(qt_parts)
+
+doc.file = doc/doc.pro
+SUBDIRS += doc

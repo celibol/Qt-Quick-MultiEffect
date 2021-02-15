@@ -1,0 +1,79 @@
+/****************************************************************************
+**
+** Copyright (C) 2021 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
+**
+** This file is part of the documentation of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:FDL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** GNU Free Documentation License Usage
+** Alternatively, this file may be used under the terms of the GNU Free
+** Documentation License version 1.3 as published by the Free Software
+** Foundation and appearing in the file included in the packaging of
+** this file. Please review the following information to ensure
+** the GNU Free Documentation License version 1.3 requirements
+** will be met: https://www.gnu.org/licenses/fdl-1.3.html.
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+/*!
+    \group quickmultieffect-examples
+    \title Qt Quick MultiEffect Examples
+*/
+
+/*!
+    \example testbed
+    \title Qt Quick MultiEffect Example: Testbed
+    \ingroup quickmultieffect-examples
+    \brief A testbed for all QuickMultiEffect features.
+
+    The \e Testbed example allows testing all features separately or together,
+    while confirming that generated shaders are optimal. It's also useful in
+    customizing or extending the shader for specific needs.
+*/
+
+/*!
+    \example effectsbench
+    \title Qt Quick MultiEffect Example: EffectsBench
+    \ingroup quickmultieffect-examples
+    \brief Compares performance of QuickMultiEffect to Qt Graphical Effects.
+
+
+    The \e EffectsBench example compares performance of QuickMultiEffect to
+    the effects provided by Qt Graphical Effects when the amount of effects
+    is increased.
+*/
+
+/*!
+    \example itemswitcher
+    \title Qt Quick MultiEffect Example: ItemSwitcher
+    \ingroup quickmultieffect-examples
+    \brief Demonstrates switching between QtQuick items using a set of fancy
+           animations.
+
+    The \e ItemSwitcher example demonstrates one use case for QuickMultiEffect.
+    It allows switching between QtQuick items using fancy animations (Blinds,
+    Thunder, 3DFlip, etc.) Based on this example it's easy to implement your
+    own custom switching animations.
+*/
+
+/*!
+    \example qdstester
+    \title Qt Quick MultiEffect Example: QDSTester
+    \ingroup quickmultieffect-examples
+    \brief Allows tweaking and animating QuickMultiEffect properties using
+           Qt Design Studio.
+
+    The \e QDSTester example allows tweaking the QuickMultiEffect properties of
+    a simple source item with Qt Design Studio, and animating those properties
+    in Qt Design Studio timeline.
+*/

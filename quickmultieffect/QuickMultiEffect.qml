@@ -37,6 +37,7 @@ import "private"
 
 /*!
     \qmltype QuickMultiEffect
+    \inqmlmodule "qrc:/quickmultieffect"
     \since QuickMultiEffect 1.0
 
     \brief Combination of multiple effects in a single item.
@@ -50,18 +51,41 @@ import "private"
 
     To use QuickMultiEffect in your own application UI, follow these steps:
 
-    1) Copy 'quickmultieffect' directory and import quickmultieffect/include.pri
-       in your pro file, or do similar with other build systems.
-    2) Add 'import "qrc:/quickmultieffect"' and QuickMultiEffect {...} component
-       into your QML file.
-    3) Set its source property to item you want to add effect to.
-    4) Enable QuickMultiEffect features you want to use. These are boolean
-       properties named "*Enabled" e.g. blurEnabled, contrastEnabled,
-       colorizeEnabled etc. Shader code will only be generated for enabled
-       features to keep it as performant as possible.
-    5) Tweak and/or animate the effect properties. Note that some properties are
+    \list 1
+
+    \li Copy the \c quickmultieffect directory into your project.
+
+    \li In your .pro file, add
+        \badcode
+        include(quickmultieffect/include.pri)
+        \endcode
+        or do the equivalent with build systems other than qmake.
+
+    \li Add
+        \badcode
+        import "qrc:/quickmultieffect"
+        \endcode
+
+       and
+       \badcode
+       QuickMultiEffect {
+           ...
+       }
+       \endcode
+       component into your QML file.
+
+    \li Set the \l {QuickMultiEffect}'s \e source property to the item you want
+        to add an effect to.
+
+    \li Enable the QuickMultiEffect features you want to use. These are boolean
+       properties with a suffix \e Enabled, e.g. blurEnabled, contrastEnabled,
+       colorizeEnabled, and so on. To improve performance, shader code will only
+       be generated for features that are enabled.
+
+    \li Tweak and/or animate the effect properties. Note that some properties are
        meant to be set beforehand and not during the animations for optimal
-       performance. These are documented with "Performance note" comments.
+       performance. These are documented with \b {Performance note} comments.
+    \endlist
 */
 
 Item {
@@ -71,8 +95,8 @@ Item {
         \qmlproperty var QuickMultiEffect::source
 
         Source item for the effect. This does not need to be ShaderEffectSource
-        or have layer.enabled set to true as QuickMultiEffect will internally
-        generate ShaderEffectSource as texture source.
+        or have \c {layer.enabled} set to \c true as QuickMultiEffect will
+        internally generate a ShaderEffectSource as the texture source.
     */
     property var source
 
@@ -80,11 +104,12 @@ Item {
         \qmlproperty bool QuickMultiEffect::hideSource
 
         When enabled, source item is hidden. This is often preferred when the
-        effect item replaces the source item. Source item visibility property
-        can also be set to false, but then MouseArea etc. interaction on it
-        are not available so using hideSource might be preferred.
+        effect item replaces the source item. Another option is to set the source
+        item's \e visibility property to \c false, but that disables also user
+        interaction (for example, events from a MouseArea). Therefore, hiding the
+        the source item may be preferred.
 
-        By default, the property is set to \c true.
+        By default, this property is set to \c true.
     */
     property bool hideSource: true
 
@@ -92,26 +117,28 @@ Item {
         \qmlproperty bool QuickMultiEffect::paddingEnabled
 
         When enabled, item size is padded with paddingRect or automatically
-        based on blurMax. Setting this false keeps item size same as original,
-        if blur/shadow are not used or item already contains enough padding to
-        fit all required content after the effects.
+        based on blurMax. Setting this to \c false keeps the item size as original,
+        if blur/shadow is not used or the item already contains enough padding to
+        fit all required content after applying the effects.
 
-        Performance note: Item size should be as small as possible for optimal performance.
-        Performance note: Causes item resizing so don't change this during animations.
+        \include notes.qdocinc performance item size
+
+        \include notes.qdocinc performance item resize
     */
     property bool paddingEnabled: true
 
     /*!
         \qmlproperty rect QuickMultiEffect::paddingRect
 
-        Set this to increase item size manually so that blur & shadows will fit.
-        If paddingEnabled is enabled and paddingRect is not set, item is padded
+        Set this to increase item size manually so that blur and/or shadows will fit.
+        If paddingEnabled is enabled and paddingRect is not set, the item is padded
         to fit maximally blurred item based on blurMax. When enabling the shadow,
-        this usually needs to be set based on how much shadowHorizontalOffset and
-        shadowVerticalOffset will be used.
+        the padding rect typically needs to take shadowHorizontalOffset and
+        shadowVerticalOffset into account.
 
-        Performance note: Item size should be as small as possible for optimal performance.
-        Performance note: Causes item resizing so don't change this during animations.
+        \include notes.qdocinc performance item size
+
+        \include notes.qdocinc performance item resize
     */
     property rect paddingRect: Qt.rect(0, 0, 0, 0)
 
@@ -120,7 +147,7 @@ Item {
 
         Enables the brightness effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool brightnessEnabled: false
 
@@ -140,7 +167,7 @@ Item {
 
         Enables the contrast effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool contrastEnabled: false
 
@@ -160,7 +187,7 @@ Item {
 
         Enables the saturation effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool saturationEnabled: false
 
@@ -180,7 +207,7 @@ Item {
 
         Enables the colorize effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool colorizeEnabled: false
 
@@ -210,7 +237,7 @@ Item {
 
         Enables the blur effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool blurEnabled: false
 
@@ -223,7 +250,7 @@ Item {
         the property is set to \c 0.0 (no change). The amount of full blur
         is affected by blurMax and blurMultiplier.
 
-        Performance note: If you don't need to go close to 1.0 at any point
+        \b {Performance note:} If you don't need to go close to 1.0 at any point
         of blur animations, consider reducing blurMax or blurMultiplier for
         optimal performance.
     */
@@ -239,27 +266,28 @@ Item {
         blur). By default, the property is set to \c 32. For the most optimal
         performance, select as small value as you need.
 
-        Note: This affects to both blur and shadow effects.
+        \note This affects to both blur and shadow effects.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
-        Performance note: Causes item resizing so don't change this during animations.
+        \include notes.qdocinc performance shader regen
+
+        \include notes.qdocinc performance item resize
     */
     property int blurMax: 32
 
     /*!
         \qmlproperty real QuickMultiEffect::blurMultiplier
 
-        This property defines multiplier for extending the radius of blur.
+        This property defines a multiplier for extending the blur radius.
 
         The value ranges from 0.0 (not multiplied) to inf. By default,
         the property is set to \c 0.0. Incresing the multiplier extends the
         blur radius, but decreases the blur quality. This is more performant
-        option for bigger blur radius than blurMax as it doesn't increase
+        option for a bigger blur radius than blurMax as it doesn't increase
         the amount of texture lookups.
 
-        Note: This affects to both blur and shadow effects.
+        \note This affects to both blur and shadow effects.
 
-        Performance note: Causes item resizing so don't change this during animations.
+        \include notes.qdocinc performance item resize
     */
     property real blurMultiplier: 0.0
 
@@ -268,7 +296,7 @@ Item {
 
         Enables the shadow effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool shadowEnabled: false
 
@@ -291,7 +319,7 @@ Item {
         the property is set to \c 1.0. The amount of full blur
         is affected by blurMax and blurMultiplier.
 
-        Performance note: The most optimal way to reduce shadow blurring is
+        \b {Performance note:} The most optimal way to reduce shadow blurring is
         to make blurMax smaller (if it isn't needed for item blur). Just remember
         to not adjust blurMax during animations.
     */
@@ -300,13 +328,13 @@ Item {
     /*!
         \qmlproperty real QuickMultiEffect::shadowHorizontalOffset
 
-        This property defines the horizontal offset of shadow from the item
-        center.
+        This property defines the horizontal offset of the shadow from the
+        item center.
 
         The value ranges from -inf to inf. By default, the property is set
         to \c 10.0.
 
-        Note: When moving shadow position away from center and adding
+        \note When moving shadow position away from center and adding
         shadowBlur, you possibly also need to increase the paddingRect
         accordingly if you want the shadow to not be clipped.
     */
@@ -315,12 +343,13 @@ Item {
     /*!
         \qmlproperty real QuickMultiEffect::shadowVerticalOffset
 
-        This property defines the vertical offset of shadow from the item center.
+        This property defines the vertical offset of the shadow from the
+        item center.
 
         The value ranges from -inf to inf. By default,
         the property is set to \c 10.0.
 
-        Note: When moving shadow position away from center and adding
+        \note When moving shadow position away from center and adding
         shadowBlur, you possibly also need to increase the paddingRect
         accordingly if you want the shadow to not be clipped.
     */
@@ -330,10 +359,10 @@ Item {
         \qmlproperty color QuickMultiEffect::shadowColor
 
         This property defines the RGBA color value which is used to colorize
-        the shadow. It is useful for example when shadow is used as glow
-        effect instead.
+        the shadow. It is useful for example when a shadow is used for
+        simulating a glow effect.
 
-        By default, the property is set to \c  Qt.rgba(0.0, 0.0, 0.0, 1.0)
+        By default, the property is set to \c {Qt.rgba(0.0, 0.0, 0.0, 1.0)}
         (black).
     */
     property color shadowColor: Qt.rgba(0.0, 0.0, 0.0, 1.0)
@@ -341,15 +370,15 @@ Item {
     /*!
         \qmlproperty real QuickMultiEffect::shadowScale
 
-        This property defines the scale of shadow. Scaling is applied from
+        This property defines the scale of the shadow. Scaling is applied from
         the center of the item.
 
         The value ranges from 0 to inf. By default, the property is set to
         \c 1.0.
 
-        Note: When increasing the shadowScale, you possibly also need to
-        increase the paddingRect accordingly if you want the shadow to not
-        be clipped.
+        \note When increasing the shadowScale, you possibly also need to
+        increase the paddingRect accordingly to avoid the shadow from being
+        clipped.
     */
     property real shadowScale: 1.0
 
@@ -358,7 +387,7 @@ Item {
 
         Enables the mask effect.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool maskEnabled: false
 
@@ -366,9 +395,9 @@ Item {
         \qmlproperty var QuickMultiEffect::maskSource
 
         Source item for the mask effect. Should point to ShaderEffectSource,
-        item with layer.enabled set to true or item that can be directly used
-        as an texture source (e.g. Image). The alpha chanel of the source item
-        is used for masking.
+        item with \c {layer.enabled} set to \c true, or to an item that can be
+        directly used as a texture source (e.g. \l [QML] Image). The alpha
+        channel of the source item is used for masking.
     */
     property var maskSource
 
@@ -402,7 +431,7 @@ Item {
     /*!
         \qmlproperty real QuickMultiEffect::maskThresholdUp
 
-        This property defines a upper threshold value for the mask pixels.
+        This property defines an upper threshold value for the mask pixels.
         The mask pixels that have an alpha value below this property are used
         to completely mask away the corresponding pixels from the source item.
         The mask pixels that have a higher alpha value are used to alphablend
@@ -417,7 +446,7 @@ Item {
         \qmlproperty real QuickMultiEffect::maskSpreadUp
 
         This property defines the smoothness of the mask edges near the
-        maskThresholdUp. Setting higher spread values softens the transition
+        maskThresholdUp. Using higher spread values softens the transition
         from the transparent mask pixels towards opaque mask pixels by adding
         interpolated values between them.
 
@@ -429,13 +458,13 @@ Item {
     /*!
         \qmlproperty bool QuickMultiEffect::maskInverted
 
-        This property switches mask to opposite side. Meaning that instead of
+        This property switches the mask to the opposite side; instead of
         masking away the content outside maskThresholdLow and maskThresholdUp,
         content between them will get masked away.
 
         By default, the property is set to \c false.
 
-        Performance note: Causes shader regeneration so don't change this during animations.
+        \include notes.qdocinc performance shader regen
     */
     property bool maskInverted: false
 
