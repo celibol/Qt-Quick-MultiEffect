@@ -1,6 +1,6 @@
 /******************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt QuickMultiEffect module.
@@ -30,9 +30,7 @@
 **
 ******************************************************************************/
 
-// GraphicsInfo was introduced in Qt 5.8 / QtQuick 2.8.
-// Disabling that, this effect should work with any Qt 5 QtQuick version.
-import QtQuick 2.8
+import QtQuick
 import "private"
 
 /*!
@@ -146,8 +144,6 @@ Item {
         \qmlproperty bool QuickMultiEffect::brightnessEnabled
 
         Enables the brightness effect.
-
-        \include notes.qdocinc performance shader regen
     */
     property bool brightnessEnabled: false
 
@@ -166,8 +162,6 @@ Item {
         \qmlproperty bool QuickMultiEffect::contrastEnabled
 
         Enables the contrast effect.
-
-        \include notes.qdocinc performance shader regen
     */
     property bool contrastEnabled: false
 
@@ -186,8 +180,6 @@ Item {
         \qmlproperty bool QuickMultiEffect::saturationEnabled
 
         Enables the saturation effect.
-
-        \include notes.qdocinc performance shader regen
     */
     property bool saturationEnabled: false
 
@@ -206,8 +198,6 @@ Item {
         \qmlproperty bool QuickMultiEffect::colorizeEnabled
 
         Enables the colorize effect.
-
-        \include notes.qdocinc performance shader regen
     */
     property bool colorizeEnabled: false
 
@@ -463,17 +453,14 @@ Item {
         content between them will get masked away.
 
         By default, the property is set to \c false.
-
-        \include notes.qdocinc performance shader regen
     */
     property bool maskInverted: false
-
 
     // Read-only access to generated shaders. These can be used for
     // optimization, to debug the behavior and optionally implement custom
     // shader versions.
-    readonly property alias fragmentShaderString: shaderItem.fragmentShader
-    readonly property alias vertexShaderString: shaderItem.vertexShader
+    readonly property alias fragmentShaderString: shaderItemPriv.fshader
+    readonly property alias vertexShaderString: shaderItemPriv.vshader
 
     // Read-only access to effect item rectangle. This can be used e.g. to see
     // the area item covers.
@@ -489,11 +476,10 @@ Item {
 
         readonly property rect paddingRect: paddingEnabled ? rootItem.paddingRect : Qt.rect(0, 0, 0, 0)
         // Controls if blurItems need to be generated
-        readonly property bool blurItemsNeeded: (blurEnabled || shadowEnabled)
+        readonly property bool blurItemsNeeded: (blurEnabled || shadowEnabled) && (blurMax > 0)
         readonly property bool generateBlurItems: rootItem.visible && priv.blurItemsNeeded
-        property string shaderVersions: shaderItem._isCore ? "core" : "compatibility"
-        property string blurItemsVertexShader: "qrc:/quickmultieffect/shaders/" + priv.shaderVersions + "/bluritems.vert"
-        property string blurItemsFragmentShader: "qrc:/quickmultieffect/shaders/" + priv.shaderVersions + "/bluritems.frag"
+        property string blurItemsVertexShader: "qrc:/quickmultieffect/shaders/bluritems.vert.qsb"
+        property string blurItemsFragmentShader: "qrc:/quickmultieffect/shaders/bluritems.frag.qsb"
 
         readonly property bool useBlurItem1: generateBlurItems
         readonly property bool useBlurItem2: generateBlurItems
@@ -509,36 +495,6 @@ Item {
     // Initial size
     implicitWidth: source ? source.width : 100
     implicitHeight: source ? source.height : 100
-
-    function blurWeight(v) {
-        return Math.max(0.0, Math.min(1.0, 1.0 - v * 2.0));
-    }
-
-    function calculateBlurWeights(blurLod) {
-        var bw1 = blurWeight(Math.abs(blurLod - 0.1));
-        var bw2 = blurWeight(Math.abs(blurLod - 0.3));
-        var bw3 = blurWeight(Math.abs(blurLod - 0.5));
-        var bw4 = blurWeight(Math.abs(blurLod - 0.7));
-        var bw5 = blurWeight(Math.abs(blurLod - 0.9));
-        var bw6 = blurWeight(Math.abs(blurLod - 1.1));
-
-        var bsum = bw1 + bw2 + bw3 + bw4 + bw5 + bw6;
-        shaderItem.blurWeight1 = Qt.vector4d(bw1 / bsum, bw2 / bsum, bw3 / bsum, bw4 / bsum);
-        shaderItem.blurWeight2 = Qt.vector2d(bw5 / bsum, bw6 / bsum);
-    }
-
-    function calculateShadowWeights(shadowLod) {
-        var sw1 = blurWeight(Math.abs(shadowLod - 0.1));
-        var sw2 = blurWeight(Math.abs(shadowLod - 0.3));
-        var sw3 = blurWeight(Math.abs(shadowLod - 0.5));
-        var sw4 = blurWeight(Math.abs(shadowLod - 0.7));
-        var sw5 = blurWeight(Math.abs(shadowLod - 0.9));
-        var sw6 = blurWeight(Math.abs(shadowLod - 1.1));
-
-        var ssum = sw1 + sw2 + sw3 + sw4 + sw5 + sw6;
-        shaderItem.shadowBlurWeight1 = Qt.vector4d(sw1 / ssum, sw2 / ssum, sw3 / ssum, sw4 / ssum);
-        shaderItem.shadowBlurWeight2 = Qt.vector2d(sw5 / ssum, sw6 / ssum);
-    }
 
     // Main source item.
     ShaderEffectSource {
@@ -659,17 +615,18 @@ Item {
     ShaderEffect {
         id: shaderItem
         property var src: itemSource
-        property alias contrast: rootItem.contrast
-        property alias brightness: rootItem.brightness
-        property alias saturation: rootItem.saturation
+        property real contrast: rootItem.contrastEnabled ? rootItem.contrast : 0.0
+        property real brightness: rootItem.brightnessEnabled ? rootItem.brightness : 0.0
+        property real saturation: rootItem.saturationEnabled ? rootItem.saturation : 0.0
         // Packing some properties into vec4 & vec2 for shader optimization
         property vector4d colorizeColor: Qt.vector4d(rootItem.colorizeColor.r, rootItem.colorizeColor.g,
-                                                     rootItem.colorizeColor.b, rootItem.colorize)
+                                                     rootItem.colorizeColor.b, rootItem.colorizeEnabled ? rootItem.colorize : 0.0)
         property alias maskSrc: rootItem.maskSource
         property vector4d mask: Qt.vector4d(rootItem.maskThresholdLow, 1.0 + rootItem.maskSpreadLow,
                                             rootItem.maskThresholdUp, 1.0 + rootItem.maskSpreadUp)
+        property real maskInverted: rootItem.maskInverted
         property vector4d shadowColor: Qt.vector4d(rootItem.shadowColor.r, rootItem.shadowColor.g,
-                                                   rootItem.shadowColor.b, rootItem.shadowOpacity)
+                                                   rootItem.shadowColor.b, rootItem.shadowEnabled ? rootItem.shadowOpacity : 0.0)
         property real shadowScale: 1.0 / rootItem.shadowScale
         property vector2d shadowOffset: Qt.vector2d(rootItem.shadowHorizontalOffset / width,
                                                     rootItem.shadowVerticalOffset / height)
@@ -690,13 +647,6 @@ Item {
         property vector4d shadowBlurWeight1
         property vector2d shadowBlurWeight2
 
-        function calculateLod(blurAmount) {
-            return Math.sqrt(blurAmount * rootItem.blurMax / 64.0) * 1.2 - 0.2;
-        }
-
-        readonly property real blurLod: calculateLod(rootItem.blur)
-        readonly property real shadowLod: calculateLod(rootItem.shadowBlur)
-
         x: -priv.paddingRect.x - priv.itemPadding
         y: -priv.paddingRect.y - priv.itemPadding
         width: parent.width + priv.paddingRect.x + priv.paddingRect.width + (priv.itemPadding * 2)
@@ -710,200 +660,104 @@ Item {
             interval: 0
             onTriggered: {
                 if (rootItem.visible) {
-                    console.debug("QuickMultiEffect: Item resized.");
+                    //console.debug("QuickMultiEffect: Item resized.");
                     rootItem.sizeChangedSignal();
                 }
             }
         }
 
-        // *** private ***
-        // Shader generation supports both compatibility (#version 150) and
-        // core (#version 330) GLSL versions
-        readonly property bool _isCore: GraphicsInfo.profile === GraphicsInfo.OpenGLCoreProfile
-        readonly property string _attribute: _isCore ? "in " : "attribute "
-        // Vertex "varying"
-        readonly property string _vvarying: _isCore ? "out " : "varying "
-        // Fragment "varying"
-        readonly property string _fvarying: _isCore ? "in " : "varying "
-        readonly property string _texture: _isCore ? "texture" : "texture2D"
-        readonly property string _fragColor: _isCore ? "fragColor" : "gl_FragColor"
+        QtObject {
+            id: shaderItemPriv
+            // *** internal properties ***
 
-        readonly property string vShader:
-        {
-            var s = "";
-            if (_isCore) {
-                s += "#version 330 core\n";
+            readonly property string _m: rootItem.maskEnabled ? "m" : ""
+            readonly property string _b: rootItem.blurEnabled && rootItem.blurMax > 0 ? "b" : ""
+            readonly property string _s: rootItem.shadowEnabled ? "s" : ""
+            readonly property string _bl: (_b == "" && _s == "") ? "0"
+                                        : priv.useBlurItem6 ? "5"
+                                        : priv.useBlurItem5 ? "4"
+                                        : priv.useBlurItem4 ? "3"
+                                        : priv.useBlurItem3 ? "2"
+                                        : rootItem.blurMax > 0 ? "1" : "0"
+            readonly property string fshader: "multieffect_c" + _m + _b + _s + _bl + ".frag.qsb"
+            readonly property string vshader: "multieffect_c" + _s + ".vert.qsb"
+
+            readonly property real blurLod: calculateLod(rootItem.blur)
+            readonly property real shadowLod: calculateLod(rootItem.shadowBlur)
+
+            function calculateLod(blurAmount) {
+                return Math.sqrt(blurAmount * rootItem.blurMax / 64.0) * 1.2 - 0.2;
             }
 
-            s += "uniform highp mat4 qt_Matrix;\n";
-            if (rootItem.shadowEnabled) {
-                s += "uniform lowp float shadowScale;
-uniform lowp vec2 shadowOffset;
-uniform lowp vec2 centerOffset;\n";
-                s += _vvarying + "highp vec2 shadowTexCoord;\n";
+            function blurWeight(v) {
+                return Math.max(0.0, Math.min(1.0, 1.0 - v * 2.0));
             }
 
-            s += _attribute + "highp vec4 qt_Vertex;\n";
-            s += _attribute + "highp vec2 qt_MultiTexCoord0;\n";
-            s += _vvarying + "highp vec2 texCoord;\n";
+            function calculateBlurWeights() {
+                var bw1 = blurWeight(Math.abs(blurLod - 0.1));
+                var bw2 = blurWeight(Math.abs(blurLod - 0.3));
+                var bw3 = blurWeight(Math.abs(blurLod - 0.5));
+                var bw4 = blurWeight(Math.abs(blurLod - 0.7));
+                var bw5 = blurWeight(Math.abs(blurLod - 0.9));
+                var bw6 = blurWeight(Math.abs(blurLod - 1.1));
 
-            s += "void main() {
-    texCoord = qt_MultiTexCoord0;\n";
-            if (rootItem.shadowEnabled) {
-                s += "    shadowTexCoord = qt_MultiTexCoord0 - shadowOffset;\n";
-                s += "    shadowTexCoord = (shadowTexCoord * shadowScale) + centerOffset;\n";
+                var bsum = bw1 + bw2 + bw3 + bw4 + bw5 + bw6;
+                shaderItem.blurWeight1 = Qt.vector4d(bw1 / bsum, bw2 / bsum, bw3 / bsum, bw4 / bsum);
+                shaderItem.blurWeight2 = Qt.vector2d(bw5 / bsum, bw6 / bsum);
             }
-            s += "    gl_Position = qt_Matrix * qt_Vertex;
-}";
-            return s;
+
+            function calculateShadowWeights() {
+                var sw1 = blurWeight(Math.abs(shadowLod - 0.1));
+                var sw2 = blurWeight(Math.abs(shadowLod - 0.3));
+                var sw3 = blurWeight(Math.abs(shadowLod - 0.5));
+                var sw4 = blurWeight(Math.abs(shadowLod - 0.7));
+                var sw5 = blurWeight(Math.abs(shadowLod - 0.9));
+                var sw6 = blurWeight(Math.abs(shadowLod - 1.1));
+
+                var ssum = sw1 + sw2 + sw3 + sw4 + sw5 + sw6;
+                shaderItem.shadowBlurWeight1 = Qt.vector4d(sw1 / ssum, sw2 / ssum, sw3 / ssum, sw4 / ssum);
+                shaderItem.shadowBlurWeight2 = Qt.vector2d(sw5 / ssum, sw6 / ssum);
+            }
+
+            onBlurLodChanged: {
+                calculateBlurWeights();
+            }
+            onShadowLodChanged: {
+                calculateShadowWeights();
+            }
+            onFshaderChanged: {
+                shadersChangedTimer.start();
+            }
+            onVshaderChanged: {
+                shadersChangedTimer.start();
+            }
         }
 
-        readonly property string fShader:
-        {
-            var s = "";
-
-            if (_isCore) {
-                s += "#version 330 core\nout vec4 fragColor;\n";
+        // Timer for updating shaders when features change
+        Timer {
+            id: shadersChangedTimer
+            interval: 0
+            onTriggered: {
+                shaderItem.fragmentShader = "qrc:/quickmultieffect/shaders/" + shaderItemPriv.fshader;
+                shaderItem.vertexShader = "qrc:/quickmultieffect/shaders/" + shaderItemPriv.vshader;
             }
-
-            s += _fvarying + "highp vec2 texCoord;
-uniform sampler2D src;
-uniform lowp float qt_Opacity;\n";
-            if (rootItem.contrastEnabled)
-                s += "uniform lowp float contrast;\n";
-            if (rootItem.brightnessEnabled)
-                s += "uniform lowp float brightness;\n";
-            if (rootItem.saturationEnabled)
-                s += "uniform lowp float saturation;\n";
-            if (rootItem.colorizeEnabled)
-                s += "uniform lowp vec4 colorizeColor;\n";
-            if (priv.useBlurItem1)
-                s += "uniform sampler2D blurSrc1;\n";
-            if (priv.useBlurItem2)
-                s += "uniform sampler2D blurSrc2;\n";
-            if (priv.useBlurItem3)
-                s += "uniform sampler2D blurSrc3;\n";
-            if (priv.useBlurItem4)
-                s += "uniform sampler2D blurSrc4;\n";
-            if (priv.useBlurItem5)
-                s += "uniform sampler2D blurSrc5;\n";
-            if (priv.useBlurItem6)
-                s += "uniform sampler2D blurSrc6;\n";
-
-            if (rootItem.blurEnabled) {
-                s += "uniform lowp vec4 blurWeight1;\n";
-                if (priv.useBlurItem5)
-                    s += "uniform lowp vec2 blurWeight2;\n"
-            }
-            if (rootItem.maskEnabled) {
-                s += "uniform sampler2D maskSrc;\nuniform lowp vec4 mask;\n";
-            }
-            if (rootItem.shadowEnabled) {
-                s += _fvarying + "highp vec2 shadowTexCoord;
-uniform lowp vec4 shadowColor;\n";
-                s += "uniform lowp vec4 shadowBlurWeight1;\n";
-                if (priv.useBlurItem5)
-                    s += "uniform lowp vec2 shadowBlurWeight2;\n";
-            }
-
-            s += "void main() {
-    highp vec4 color;\n";
-
-            // Blur
-            if (rootItem.blurEnabled) {
-                s += "    color = " + _texture + "(blurSrc1, texCoord) * blurWeight1[0];
-    color += " + _texture + "(blurSrc2, texCoord) * blurWeight1[1];\n";
-                if (priv.useBlurItem3)
-                    s += "    color += " + _texture + "(blurSrc3, texCoord) * blurWeight1[2];\n";
-                if (priv.useBlurItem4)
-                    s += "    color += " + _texture + "(blurSrc4, texCoord) * blurWeight1[3];\n";
-                if (priv.useBlurItem5)
-                    s += "    color += " + _texture + "(blurSrc5, texCoord) * blurWeight2[0];\n";
-                if (priv.useBlurItem6)
-                    s += "    color += " + _texture + "(blurSrc6, texCoord) * blurWeight2[1];\n";
-            } else {
-                s += "    color = " + _texture + "(src, texCoord);\n";
-            }
-
-            // Contrast
-            if (rootItem.contrastEnabled) {
-                s += "    color.rgb = (color.rgb - 0.5 * color.a) * (1.0 + contrast) + 0.5 * color.a;\n";
-            }
-            // Brightness
-            if (rootItem.brightnessEnabled) {
-                s += "    color.rgb += brightness * color.a;\n";
-            }
-
-            if (rootItem.saturationEnabled || rootItem.colorizeEnabled) {
-                // Calculate gray only once for features that need it
-                s += "    lowp float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));\n";
-            }
-
-            // Colorize
-            if (rootItem.colorizeEnabled) {
-                s += "    color.rgb = gray * colorizeColor.rgb * colorizeColor.a + color.rgb * (1.0 - colorizeColor.a);\n";
-            }
-
-            // Saturation
-            if (rootItem.saturationEnabled) {
-                s += "    color.rgb = mix(vec3(gray), color.rgb, 1.0 + saturation);\n";
-            }
-
-            // Shadow
-            if (rootItem.shadowEnabled) {
-                s += "    lowp float shadow = 0.0;
-    shadow = " + _texture + "(blurSrc1, shadowTexCoord).a * shadowBlurWeight1[0];
-    shadow += " + _texture + "(blurSrc2, shadowTexCoord).a * shadowBlurWeight1[1];\n";
-                if (priv.useBlurItem3)
-                    s += "    shadow += " + _texture + "(blurSrc3, shadowTexCoord).a * shadowBlurWeight1[2];\n";
-                if (priv.useBlurItem4)
-                    s += "    shadow += " + _texture + "(blurSrc4, shadowTexCoord).a * shadowBlurWeight1[3];\n";
-                if (priv.useBlurItem5)
-                    s += "    shadow += " + _texture + "(blurSrc5, shadowTexCoord).a * shadowBlurWeight2[0];\n";
-                if (priv.useBlurItem6)
-                    s += "    shadow += " + _texture + "(blurSrc6, shadowTexCoord).a * shadowBlurWeight2[1];\n";
-                s += "    shadow *= shadowColor.a;
-    lowp float aa = (1.0 - color.a) * (1.0 - shadow);
-    color.rgb = mix(shadowColor.rgb * shadow, color.rgb, color.a + aa);
-    color.a = 1.0 - aa;\n";
-            }
-
-            // Mask
-            if (rootItem.maskEnabled) {
-                s += "    lowp float alphaMask = " + _texture + "(maskSrc, texCoord).a;
-    lowp float m1 = smoothstep(mask[0] * mask[1] - (mask[1] - 0.999), mask[0] * mask[1], alphaMask);
-    lowp float m2 = smoothstep((1.0 - mask[2]) * mask[3] - (mask[3] - 0.999), (1.0 - mask[2]) * mask[3], (1.0 - alphaMask));\n";
-                if (rootItem.maskInverted)
-                    s += "    color *= (1.0 - m1 * m2);\n";
-                else
-                    s += "    color *= m1 * m2;\n";
-            }
-
-            s += "    " + _fragColor + " = color * qt_Opacity;\n";
-            s += "}";
-            return s;
         }
 
+        fragmentShader: "qrc:/quickmultieffect/shaders/multieffect_c0.frag.qsb"
+        vertexShader: "qrc:/quickmultieffect/shaders/multieffect_cs.vert.qsb"
 
-        fragmentShader: fShader
-        vertexShader: vShader
-
-        onStatusChanged: {
-            if (rootItem.visible && status == ShaderEffect.Compiled) {
-                console.debug("QuickMultiEffect: Shader generated.");
-                rootItem.shaderGeneratedSignal();
-            }
+        onFragmentShaderChanged: {
+            //console.debug("QuickMultiEffect: Fragment shader changed.");
+            rootItem.shaderGeneratedSignal();
+        }
+        onVertexShaderChanged: {
+            //console.debug("QuickMultiEffect: Vertex shader changed.");
+            rootItem.shaderGeneratedSignal();
         }
 
         Component.onCompleted: {
-            calculateBlurWeights(blurLod);
-            calculateShadowWeights(shadowLod);
-        }
-        onBlurLodChanged: {
-            calculateBlurWeights(blurLod);
-        }
-        onShadowLodChanged: {
-            calculateShadowWeights(shadowLod);
+            shaderItemPriv.calculateBlurWeights();
+            shaderItemPriv.calculateShadowWeights();
         }
     }
 }

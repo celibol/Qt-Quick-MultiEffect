@@ -48,8 +48,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick
+import QtQuick.Controls
 
 Item {
     id: rootItem
@@ -310,7 +310,7 @@ Item {
                 SettingsComponentSlider {
                     text: qsTr("Blur Max") + ": " + value.toFixed(0)
                     value: settings.blurMax
-                    from: 2
+                    from: 0
                     to: 64
                     stepSize: 2
                     onMoved: {

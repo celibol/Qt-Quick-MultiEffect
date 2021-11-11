@@ -48,9 +48,9 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtGraphicalEffects 1.12
+import QtQuick
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 import "qrc:/quickmultieffect"
 
 Window {
@@ -214,7 +214,7 @@ Window {
                     source: effectsAmount > 2 ? effect2 : null
                     // DropShadow is applied for already blurred item so
                     // blur amounts don't fully match with QuickMultiEffect.
-                    samples: 8
+                    radius: 8
                     horizontalOffset: 10 - 20 * mainWindow.animation1
                     verticalOffset: 10
                     visible: effectsAmount == 3

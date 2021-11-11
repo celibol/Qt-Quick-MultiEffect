@@ -1,10 +1,44 @@
 <RCC>
     <qresource prefix="/quickmultieffect">
         <file>QuickMultiEffect.qml</file>
-        <file>shaders/compatibility/bluritems.frag</file>
-        <file>shaders/compatibility/bluritems.vert</file>
         <file>private/BlurItem.qml</file>
-        <file>shaders/core/bluritems.frag</file>
-        <file>shaders/core/bluritems.vert</file>
+        <file>shaders/bluritems.frag.qsb</file>
+        <file>shaders/bluritems.vert.qsb</file>
+        <file>shaders/multieffect_c.vert.qsb</file>
+        <file>shaders/multieffect_c0.frag.qsb</file>
+        <file>shaders/multieffect_cb1.frag.qsb</file>
+        <file>shaders/multieffect_cb2.frag.qsb</file>
+        <file>shaders/multieffect_cb3.frag.qsb</file>
+        <file>shaders/multieffect_cb4.frag.qsb</file>
+        <file>shaders/multieffect_cb5.frag.qsb</file>
+        <file>shaders/multieffect_cbs1.frag.qsb</file>
+        <file>shaders/multieffect_cbs2.frag.qsb</file>
+        <file>shaders/multieffect_cbs3.frag.qsb</file>
+        <file>shaders/multieffect_cbs4.frag.qsb</file>
+        <file>shaders/multieffect_cbs5.frag.qsb</file>
+        <file>shaders/multieffect_cm0.frag.qsb</file>
+        <file>shaders/multieffect_cmb1.frag.qsb</file>
+        <file>shaders/multieffect_cmb2.frag.qsb</file>
+        <file>shaders/multieffect_cmb3.frag.qsb</file>
+        <file>shaders/multieffect_cmb4.frag.qsb</file>
+        <file>shaders/multieffect_cmb5.frag.qsb</file>
+        <file>shaders/multieffect_cmbs1.frag.qsb</file>
+        <file>shaders/multieffect_cmbs2.frag.qsb</file>
+        <file>shaders/multieffect_cmbs3.frag.qsb</file>
+        <file>shaders/multieffect_cmbs4.frag.qsb</file>
+        <file>shaders/multieffect_cmbs5.frag.qsb</file>
+        <file>shaders/multieffect_cms0.frag.qsb</file>
+        <file>shaders/multieffect_cms1.frag.qsb</file>
+        <file>shaders/multieffect_cms2.frag.qsb</file>
+        <file>shaders/multieffect_cms3.frag.qsb</file>
+        <file>shaders/multieffect_cms4.frag.qsb</file>
+        <file>shaders/multieffect_cms5.frag.qsb</file>
+        <file>shaders/multieffect_cs.vert.qsb</file>
+        <file>shaders/multieffect_cs0.frag.qsb</file>
+        <file>shaders/multieffect_cs1.frag.qsb</file>
+        <file>shaders/multieffect_cs2.frag.qsb</file>
+        <file>shaders/multieffect_cs3.frag.qsb</file>
+        <file>shaders/multieffect_cs4.frag.qsb</file>
+        <file>shaders/multieffect_cs5.frag.qsb</file>
     </qresource>
 </RCC>

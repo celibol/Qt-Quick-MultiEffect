@@ -48,40 +48,18 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Controls.Material 2.12
+import QtQuick
 
 Item {
     id: rootItem
 
     property string text
-    // False to show fragment shader, true to vertex shader
-    property bool showVertexShader: false
 
-    Material.theme: Material.Dark
-    Material.accent: Material.LightGreen
-
-    SettingsComponentButton {
-        id: fragmentButton
-        x: 50 * dp
-        width: 200 * dp
-        text: "Fragment Shader"
-        selected: !showVertexShader
-        onClicked: showVertexShader = false;
-    }
-    SettingsComponentButton {
-        id: vertexButton
-        anchors.left: fragmentButton.right
-        anchors.leftMargin: 10 * dp
-        width: 200 * dp
-        text: "Vertex Shader"
-        selected: showVertexShader
-        onClicked: showVertexShader = true;
-    }
+    width: textItem.width
+    height: textItem.height
 
     Rectangle {
-        anchors.fill: scrollView
+        anchors.fill: textItem
         anchors.margins: -10
         z: -1
         color: "#000000"
@@ -89,23 +67,10 @@ Item {
         border.color: "#ffffff"
         border.width: 2
     }
-
-    ScrollView {
-        id: scrollView
-        anchors.top: fragmentButton.bottom
-        anchors.topMargin: 9
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-        ScrollBar.vertical.interactive: false
-        clip: true
-
-        TextArea {
-            text: rootItem.text
-            selectByMouse: true
-            background: Item {
-            }
-        }
+    Text {
+        id: textItem
+        text: rootItem.text
+        font.pixelSize: 16
+        color: "#ffffff"
     }
 }

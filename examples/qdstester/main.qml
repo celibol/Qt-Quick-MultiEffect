@@ -48,10 +48,9 @@
 **
 ****************************************************************************/
 
-// QtQuick-Timeline module is available since Qt 5.14
-import QtQuick 2.14
-import QtQuick.Window 2.12
-import QtQuick.Timeline 1.0
+import QtQuick
+import QtQuick.Window
+import QtQuick.Timeline
 import "qrc:/quickmultieffect"
 
 Window {
@@ -97,7 +96,8 @@ Window {
                 from: 0
                 duration: 1000
                 to: 1000
-                loops: 1
+                loops: Animation.Infinite
+                running: true
             }
         ]
         endFrame: 1000

@@ -30,12 +30,12 @@
 **
 ******************************************************************************/
 
-import QtQuick 2.8
+import QtQuick
 
 ShaderEffect {
     id: blurredItem
-    property vector2d step: Qt.vector2d((1.0 + rootItem.blurMultiplier) / width,
-                                        (1.0 + rootItem.blurMultiplier) / height)
+    property vector2d offset: Qt.vector2d((1.0 + rootItem.blurMultiplier) / width,
+                                          (1.0 + rootItem.blurMultiplier) / height)
     visible: false
     smooth: true
     vertexShader: priv.blurItemsVertexShader

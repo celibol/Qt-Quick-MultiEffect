@@ -1,6 +1,6 @@
 /*!
 //! [performance shader regen]
-\b {Performance note:} Causes shader regeneration; do not change this property during animation.
+\b {Performance note:} Causes shader change; do not change this property during animation.
 //! [performance shader regen]
 
 

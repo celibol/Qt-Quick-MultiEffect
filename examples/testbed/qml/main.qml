@@ -48,8 +48,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
+import QtQuick
+import QtQuick.Window
 import "qrc:/quickmultieffect"
 
 Window {
@@ -185,10 +185,10 @@ Window {
     ShaderView {
         id: shaderView
         visible: settings.showShader
-        anchors.fill: mainArea
-        anchors.margins: 20
-        anchors.leftMargin: 30
-        text: showVertexShader ? quickMultiEffect.vertexShaderString : quickMultiEffect.fragmentShaderString
+        anchors.horizontalCenter: mainArea.horizontalCenter
+        anchors.top: mainArea.top
+        anchors.topMargin: 20
+        text: "Fragment shader: " + quickMultiEffect.fragmentShaderString + "\nVertex shader: " + quickMultiEffect.vertexShaderString
     }
 
     WarningsView {
